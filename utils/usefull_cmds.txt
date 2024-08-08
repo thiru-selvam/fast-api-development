@@ -1,0 +1,16 @@
+-- CREATE TABLE posts(
+-- uid uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+-- post_title VARCHAR,
+-- post_content TEXT,
+-- is_published BOOLEAN DEFAULT true,
+-- created_at timestamp with time zone DEFAULT now()
+-- );
+
+-- INSERT INTO posts (post_title, post_content) 
+-- VALUES
+-- ('beach trip', 'sun kissing in my face (:'),
+-- ('@@restaurent', 'food is sooo goood!!!'),
+-- ('night life', 'gonna party hard!!')
+-- ;
+
+SELECT * FROM posts where uid = '7ec015cf-da67-42b2-8af5-72314b3d06c4';

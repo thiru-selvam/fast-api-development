@@ -90,28 +90,29 @@ def get_post(uid: UUID, resp: Response):
 def create_posts(payload: Posts):
     client_cursor.execute(
         """INSERT INTO posts (post_title, post_content, is_published) VALUES (%s, %s, %s) RETURNING * """,
-        (payload.title, payload.content, payload.published))
+        (payload.title, payload.content, payload.is_published))
     created_post = client_cursor.fetchone()
     client_conn.commit()
     return {"new_post": created_post}
 
 
 @app.delete('/posts/{uid}', status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(uid: int):
-    post_index = find_index_post(uid)
-    if post_index is None:
+def delete_post(uid: UUID):
+    client_cursor.execute("""DELETE FROM posts where uid = %s RETURNING *""",(uid,))
+    del_data = client_cursor.fetchone()
+    client_conn.commit()
+    if del_data is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Id {uid} was not found in database")
-    my_posts.pop(post_index)
     return {"message": f"succesfully post was deleted"}
 
 
 @app.put('/posts/{uid}')
-def update_post(uid: int, payload: Posts):
+def update_post(uid: UUID, payload: Posts):
     print(payload)
-    post_index = find_index_post(uid)
-    if post_index is None:
+    client_cursor.execute("""UPDATE posts SET post_title = %s, post_content = %s, is_published=%s where uid = %s 
+    RETURNING *""", (payload.title, payload.content, payload.is_published, uid))
+    updated_data = client_cursor.fetchone()
+    client_conn.commit()
+    if updated_data is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Id {uid} was not found")
-    post_data = payload.model_dump()
-    post_data['id'] = uid
-    my_posts[post_index] = post_data
-    return {"message": "Successfully post was updated"}
+    return {"data": updated_data}
