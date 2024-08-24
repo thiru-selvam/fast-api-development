@@ -1,5 +1,7 @@
+from sqlalchemy.orm import Relationship
+
 from app.sql_alchemy.database import Base
-from sqlalchemy import Column, String, UUID, Boolean, text, DateTime
+from sqlalchemy import Column, String, UUID, Boolean, text, DateTime, ForeignKey
 
 
 # from sqlalchemy.orm import DeclarativeBase
@@ -15,7 +17,8 @@ class Posts(Base):
     content = Column(name='post_content', type_=String, nullable=False)
     is_published = Column(name='is_published', type_=Boolean, server_default='True')
     created_on = Column(name='created_at', type_=DateTime(timezone=True), server_default=text('Now()'))
-
+    user_uid = Column(ForeignKey("users.uid", ondelete="CASCADE"), name='user_uid', type_=UUID, nullable=False, )
+    user_info = Relationship('Users')
 
 class Users(Base):
     __tablename__ = 'users'
@@ -23,6 +26,5 @@ class Users(Base):
     first_name = Column(name='first_name', type_=String, nullable=False)
     last_name = Column(name='last_name', type_=String, nullable=False)
     email_id = Column(name='email', type_=String, nullable=False, unique=True)
-    username = Column(name='username', type_=String, nullable=False, unique=True)
     password = Column(name='password', type_=String, nullable=False)
     created_on = Column(name='created_at', type_=DateTime(timezone=True), server_default=text('Now()'), nullable=False)

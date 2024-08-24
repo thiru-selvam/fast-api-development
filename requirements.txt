@@ -3,3 +3,4 @@ psycopg2
 passlib[bcrypt]
 sqlalchemy
 pydantic
+pyjwt
