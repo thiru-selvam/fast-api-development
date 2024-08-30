@@ -1,13 +1,7 @@
+from sqlalchemy import Column, String, UUID, Boolean, text, DateTime, ForeignKey
 from sqlalchemy.orm import Relationship
 
 from app.sql_alchemy.database import Base
-from sqlalchemy import Column, String, UUID, Boolean, text, DateTime, ForeignKey
-
-
-# from sqlalchemy.orm import DeclarativeBase
-# from sqlalchemy.orm import Mapped
-# from sqlalchemy.orm import mapped_column
-# from sqlalchemy.orm import relationship
 
 
 class Posts(Base):
@@ -17,8 +11,9 @@ class Posts(Base):
     content = Column(name='post_content', type_=String, nullable=False)
     is_published = Column(name='is_published', type_=Boolean, server_default='True')
     created_on = Column(name='created_at', type_=DateTime(timezone=True), server_default=text('Now()'))
-    user_uid = Column(ForeignKey("users.uid", ondelete="CASCADE"), name='user_uid', type_=UUID, nullable=False, )
+    user_uid = Column(ForeignKey("users.uid", ondelete="CASCADE"), name='user_uid', type_=UUID, nullable=False)
     user_info = Relationship('Users')
+
 
 class Users(Base):
     __tablename__ = 'users'
@@ -28,3 +23,13 @@ class Users(Base):
     email_id = Column(name='email', type_=String, nullable=False, unique=True)
     password = Column(name='password', type_=String, nullable=False)
     created_on = Column(name='created_at', type_=DateTime(timezone=True), server_default=text('Now()'), nullable=False)
+
+
+class Likes(Base):
+    __tablename__ = 'likes'
+    user_uid = Column(ForeignKey(column='users.uid', ondelete="CASCADE"), name='user_uid', type_=UUID, nullable=False,
+                      primary_key=True)
+    post_uid = Column(ForeignKey(column='posts.uid', ondelete="CASCADE"), name='post_uid', type_=UUID, nullable=False,
+                      primary_key=True)
+    # like = Column(name='like', type_=Boolean, nullable=False, server_default='False')
+    # dislike = Column(name='dislike', type_=Boolean, nullable=False, server_default='False')
