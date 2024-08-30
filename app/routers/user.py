@@ -1,10 +1,12 @@
 from uuid import UUID
-from fastapi import Response, status, Depends, HTTPException, APIRouter
+
+from fastapi import status, Depends, HTTPException, APIRouter
 from psycopg2.extras import register_uuid
 from sqlalchemy.orm import Session
-from ..sql_alchemy.models import Users
-from ..sql_alchemy.database import get_db
+
 from ..schemas import pydantic_schema as py_schema
+from ..sql_alchemy.database import get_db
+from ..sql_alchemy.models import Users
 from ..utils.hashing_ import hash_pass
 
 router = APIRouter(

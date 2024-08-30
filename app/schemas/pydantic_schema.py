@@ -1,8 +1,8 @@
-from typing import Optional
-from pydantic import BaseModel, EmailStr, Field
-from uuid import UUID
 from datetime import datetime
+from typing import Optional
+from uuid import UUID
 
+from pydantic import BaseModel, EmailStr
 
 class BaseUser(BaseModel):
     first_name: str
@@ -32,8 +32,8 @@ class TokenData(BaseModel):
 
 
 class Token(BaseModel):
-    access_token:str
-    token_type:str
+    access_token: str
+    token_type: str
 
 
 class BasePost(BaseModel):
@@ -52,6 +52,13 @@ class PostOut(BasePost):
     created_on: datetime
     user_uid: UUID
     user_info: UserOut
+
     class Config:
         from_attributes = True
 
+class PostLikes(PostOut):
+    likes:int
+
+class Like(BaseModel):
+    post_uid: UUID
+    like: bool

@@ -1,0 +1,24 @@
+####Like-API
+
+@router.post('/', status_code=status.HTTP_201_CREATED)
+def like_post(like_data: Like, db: Session = Depends(get_db), current_user: UUID = Depends(get_current_user)):
+    liked_post_exist = db.query(Posts).filter(Posts.uid == like_data.post_uid).first()
+    if not liked_post_exist:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Requested liked post does not exist")
+    like_query = db.query(Likes).filter(Likes.post_uid == like_data.post_uid, Likes.user_uid == current_user.uid)
+    found_like = like_query.first()
+    if like_data.like:
+        if found_like:
+            if found_like is True:
+                raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"You are already like the Post")
+
+            if found_like.dislike is True and like_data.like is True:
+                raise HTTPException(status_code=status.HTTP_409_CONFLICT,
+                                    detail=f"can't able to both like and dislike post")
+        db.add(Likes(user_uid=current_user.uid, **like_data.model_dump()))
+        db.commit()
+        return {'message': 'Successfully added like'}
+    else:
+        like_query.update({'like': False}, synchronize_session=False)
+        db.commit()
+        return {'message': 'Successfully removed like'}

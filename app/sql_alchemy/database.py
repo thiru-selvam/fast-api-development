@@ -1,13 +1,14 @@
 from sqlalchemy import create_engine, URL
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 
-url_object = URL.create(drivername="postgresql",
-                        username="root",
-                        password="Selva@14599",
-                        host="127.0.0.1",
-                        port=5432,
-                        database="fast_api_dev")
+from ..config import settings
+
+url_object = URL.create(drivername=settings.database_driver,
+                        username=settings.database_username,
+                        password=settings.database_password,
+                        host=settings.database_hostname,
+                        port=settings.database_port,
+                        database=settings.database_name)
 
 # SQLALCHEMY_DATABASE_URL = 'postgresql://root:Selva@14599@localhost/fast_api_dev'
 
@@ -24,5 +25,3 @@ def get_db():
         yield db
     finally:
         db.close()
-
-
