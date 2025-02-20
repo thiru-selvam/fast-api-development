@@ -35,3 +35,32 @@ class TokenData(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+
+# class BaseKnownDiff(BaseModel):
+#     diff_name: str
+#     rule_id: str
+#     diff_url: str
+#     description: dict
+#     raised_by: str
+#     diff_image: str
+#     assigned_to: str
+#     is_active: bool = True
+#     # rating: Optional[int] = None
+#
+#
+# class PostIn(BaseKnownDiff):
+#     pass
+#
+#
+# class PostOut(BasePost):
+#     uid: UUID
+#     created_on: datetime
+#     user_uid: UUID
+#     user_info: UserOut
+#
+#     class Config:
+#         from_attributes = True
+#
+# class PostLikes(PostOut):
+#     likes:int
