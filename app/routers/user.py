@@ -31,7 +31,11 @@ def create_user(payload: py_schema.UserIn, db: Session = Depends(get_db)):
         db.refresh(user_data)
         return user_data
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail='This email is already registered')
+        if "duplicate key" in str(e):
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail='This email is already registered')
+        else:
+            print(e)
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Some Error has occurred')
 
 
 @router.get('/{uid}', status_code=status.HTTP_200_OK, response_model=py_schema.UserOut)
